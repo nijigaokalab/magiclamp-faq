@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>magiclamp-faq お問い合わせフォーム</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    .review-box {
+      background-color: #fefce8;
+      border: 1px solid #facc15;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <div class="container mx-auto px-4 py-8 max-w-2xl">
+    <h1 class="text-2xl font-bold text-center mb-6">magiclamp-faq お問い合わせフォーム</h1>
+
+    <!-- レビュープレビュー -->
+    <div id="review-section" class="mb-6">
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">💬 最近寄せられたご質問</h2>
+      <div id="review-list" class="space-y-4"></div>
+    </div>
+
+    <form id="faqForm" class="space-y-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">お名前</label>
+        <input type="text" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-md" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">メールアドレス</label>
+        <input type="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-md" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">お問い合わせ内容</label>
+        <textarea name="message" rows="5" required class="w-full px-4 py-2 border border-gray-300 rounded-md"></textarea>
+      </div>
+
+      <!-- プライバシー同意はここに配置 -->
+      <div class="flex items-start">
+        <input type="checkbox" id="privacy" name="privacy" required
+          class="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+        <label for="privacy" class="ml-2 block text-sm text-gray-700">
+          <a href="https://nijigaokalab.github.io/privacy-policy.html" target="_blank" class="underline text-blue-600 hover:text-blue-800">
+            個人情報保護方針
+          </a>に同意します <span class="text-red-600">*</span>
+        </label>
+      </div>
+
+      <div class="text-center">
+        <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+          送信する
+        </button>
+      </div>
+    </form>
+
+    <p class="text-sm text-center text-gray-500 mt-8">
+      このフォームから送信された情報は、お問い合わせへの回答のみに使用します。
+    </p>
+  </div>
+
+  <script>
+    // レビューを取得して表示
+    fetch("https://script.google.com/macros/s/AKfycbx7NyTLCCfYzyUVeP56V_DAm22YpcHUWt2ew5iHtDGQSNwTXdlB6PfyA7u0OdIDwr1S/exec")
+      .then(response => response.json())
+      .then(reviews => {
+        const list = document.getElementById('review-list');
+        reviews.forEach(message => {
+          const div = document.createElement('div');
+          div.className = 'review-box';
+          div.textContent = message;
+          list.appendChild(div);
+        });
+      })
+      .catch(error => {
+        console.error('レビュー取得エラー:', error);
+      });
+
+    // フォーム送信処理
+    document.getElementById('faqForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+      const scriptURL = "https://script.google.com/macros/s/AKfycbwX-6Drzn7PHKb9mcY8rf655HQpq__mhCfTRYBBNxUWVKyyBYsC2UXm2Cb7AFMQ9STgFg/exec";
+
+      fetch(scriptURL, { method: "POST", body: formData })
+        .then(response => {
+          if (response.ok) {
+            window.location.href = "https://nijigaokalab.github.io/thanks/";
+          } else {
+            alert("送信に失敗しました。");
+          }
+        })
+        .catch(error => {
+          alert("送信中にエラーが発生しました。");
+        });
+    });
+  </script>
+</body>
+</html>
